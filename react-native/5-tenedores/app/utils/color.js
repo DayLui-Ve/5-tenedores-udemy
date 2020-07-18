@@ -1,0 +1,1 @@
+export const CORPORATIVE_COLOR = '#00a680'
