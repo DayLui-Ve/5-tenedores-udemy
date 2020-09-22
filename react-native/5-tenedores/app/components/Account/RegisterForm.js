@@ -1,22 +1,43 @@
 import React, { useState } from 'react'
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import Loading from '../Loading';
 import { CORPORATIVE_COLOR } from '../../utils/color';
 import { validateEmail } from '../../utils/validations';
 import { size, isEmpty } from "lodash";
-import Toast from 'react-native-root-toast'
+import ToastRoot from 'react-native-root-toast'
+// import Toast from 'react-native-simple-toast'
+import * as firebase from 'firebase';
+import { useNavigation } from "@react-navigation/native";
+
+const showToast = (message) => {
+  // Toast.showWithGravity(message, Toast.SHORT, Toast.CENTER);
+  ToastRoot.show(message, {
+      duration: ToastRoot.durations.SHORT,
+      position: ToastRoot.positions.CENTER,
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+      opacity: 0.7,
+  });
+}
 
 export default function RegisterForm(props) {
 
   // console.log(props);
-  const { toastRef } = props
+  // const { toastRef } = props
   // console.log(toastRef);
 
   const [showPassword, setShowPassword] = useState(false)
 
   const [showRepeatPassword, setShowRepeatPassword] = useState(false)
 
+  const [loading, setLoading] = useState(false)
+
   const [formData, setFormData] = useState(defaultFormValue())
+
+  const navigation = useNavigation();
 
   const onSubmit = () => {
     // console.log(formData)
@@ -31,22 +52,35 @@ export default function RegisterForm(props) {
     ) {
       // console.log('Todos los campos son requeridos')
       // toastRef.current.show("Todos los campos son requeridos");
-      Toast.show("Todos los campos son requeridos", {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      });
+      showToast("Todos los campos son requeridos");
+      // ToastRoot.show("Todos los campos son requeridos");
+      // Toast.show("Todos los campos son requeridos", {
+      //   duration: Toast.durations.LONG,
+      //   position: Toast.positions.BOTTOM,
+      //   shadow: true,
+      //   animation: true,
+      //   hideOnPress: true,
+      //   delay: 0,
+      // });
     }else if (!validateEmail(formData.email)) {
-        console.log('El email es inválido')
+      showToast('El email es inválido')
     }else if (formData.password !== formData.repeatPassword) {
-        console.log('Las contraseñas deben ser iguales')
+      showToast('Las contraseñas deben ser iguales')
     }else if ( (size(formData.password) < 6) ) {
-        console.log('Las contraseñas deben ser mínimo 6 caracteres')
+      showToast('Las contraseñas deben ser mínimo 6 caracteres')
     }else{
-      console.log('ok')
+      setLoading(true)
+      // TODO: Lo fácil que es registrar un usuario con firebase
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(formData.email, formData.password)
+        .then(response => {
+          setLoading(false);
+          navigation.navigate("account");
+        })
+        .catch(() => {
+          showToast('El email ya está en uso')
+        })
     }
 
   }
@@ -108,6 +142,7 @@ export default function RegisterForm(props) {
         buttonStyle={styles.btnRegister}
         onPress={onSubmit}
       />
+      <Loading isVisible={loading} text="Registrando cuenta"/>
     </View>
   );
 
