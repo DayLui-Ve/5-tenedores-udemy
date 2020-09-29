@@ -3,6 +3,8 @@ import { StyleSheet, View, ScrollView, Text, Image } from "react-native";
 import { Divider } from "react-native-elements";
 import { CORPORATIVE_COLOR } from "../../utils/color";
 import { useNavigation } from '@react-navigation/native';
+import LoginForm from '../../components/Account/LoginForm';
+import LoginFacebook from '../../components/Account/LoginFacebook';
 
 export default function Login() {
 
@@ -14,11 +16,13 @@ export default function Login() {
                 style={styles.logo}
             />
             <View style={styles.viewContainer}>
-                <Text>Login Form</Text>
+                <LoginForm />
                 <CreateAccount />
             </View>
             <Divider style={styles.divider}/>
-            <Text>Social Logged</Text>
+            <View style={styles.viewContainer}>
+                <LoginFacebook />
+            </View>
         </ScrollView>
     )
 

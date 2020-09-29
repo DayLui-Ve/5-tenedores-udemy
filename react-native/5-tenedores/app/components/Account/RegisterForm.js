@@ -5,23 +5,10 @@ import Loading from '../Loading';
 import { CORPORATIVE_COLOR } from '../../utils/color';
 import { validateEmail } from '../../utils/validations';
 import { size, isEmpty } from "lodash";
-import ToastRoot from 'react-native-root-toast'
 // import Toast from 'react-native-simple-toast'
 import * as firebase from 'firebase';
 import { useNavigation } from "@react-navigation/native";
-
-const showToast = (message) => {
-  // Toast.showWithGravity(message, Toast.SHORT, Toast.CENTER);
-  ToastRoot.show(message, {
-      duration: ToastRoot.durations.SHORT,
-      position: ToastRoot.positions.CENTER,
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-      opacity: 0.7,
-  });
-}
+import { showToast } from '../../utils/toast';
 
 export default function RegisterForm(props) {
 
@@ -79,6 +66,7 @@ export default function RegisterForm(props) {
           navigation.navigate("account");
         })
         .catch(() => {
+          setLoading(false);
           showToast('El email ya está en uso')
         })
     }
