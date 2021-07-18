@@ -26,11 +26,19 @@
     },
     "android": {
       "package": "com.dayluicore.tenedores",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBeYDGoRTUA2KU_SoGikKdvqjBb32buVLg"
+        }
+      },
       "versionCode": 1,
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
       ]
     }
   }
